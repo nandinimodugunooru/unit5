@@ -1,0 +1,68 @@
+counterSlice.js:
+import { createSlice } from "@reduxjs/toolkit";
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState: { value: 0 },
+  reducers: {
+    increment: (state) => { state.value += 1; },
+    decrement: (state) => { state.value -= 1; },
+    reset: (state) => { state.value = 0; }
+  }
+});
+
+export const { increment, decrement, reset } = counterSlice.actions;
+export default counterSlice.reducer;
+store.js:
+import { configureStore } from "@reduxjs/toolkit";
+import counterReducer from "./counterSlice";
+
+export const store = configureStore({
+  reducer: {
+    counter: counterReducer
+  }
+});
+index.js:
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+Counter.js:
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { increment, decrement, reset } from "../store/counterSlice";
+
+export default function Counter() {
+  const value = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>Redux Counter Example</h2>
+      <h3>Counter Value: {value}</h3>
+      <button onClick={() => dispatch(increment())}>+1</button>{" "}
+      <button onClick={() => dispatch(decrement())}>-1</button>{" "}
+      <button onClick={() => dispatch(reset())}>Reset</button>
+    </div>
+  );
+}
+App.js:
+import React from "react";
+import Counter from "./components/Counter";
+
+export default function App() {
+  return (
+    <div>
+      <h1>React + Redux Counter Application</h1>
+      <Counter />
+    </div>
+  );
+}
