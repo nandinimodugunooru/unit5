@@ -1,0 +1,34 @@
+PostsList.js:
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+export default function PostsList() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/posts?_limit=5")
+      .then(res => setPosts(res.data))
+      .catch(err => console.error(err));
+  }, []);
+
+  return (
+    <div>
+      <h3>Posts</h3>
+      <ul>
+        {posts.map(p => <li key={p.id}><b>{p.title}</b></li>)}
+      </ul>
+    </div>
+  );
+}
+App.js:
+import React from "react";
+import PostsList from "./components/PostsList";
+
+export default function App() {
+  return (
+    <div>
+      <h1>React Axios Data Fetch Example</h1>
+      <PostsList />
+    </div>
+  );
+}
